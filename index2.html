@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 Dédicaces de Pâques</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { overflow: hidden; background: #fdf6f0; font-family: 'Lora', serif; }
+
+  /* ── Fond animé ── */
+  .bg-gradient {
+    position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(135deg, #fdf6f0 0%, #fce4ec 30%, #f3e5f5 60%, #e8f5e9 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ── Particules ── */
+  .particles-container { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+  .particle { position: absolute; font-size: 1.4rem; opacity: 0; animation: floatUp linear infinite; }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg) scale(0.5); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(-10vh) rotate(360deg) scale(1); opacity: 0; }
+  }
+
+  /* ── Scroll Container ── */
+  .scroll-wrapper { 
+    position: relative; z-index: 2; height: 100vh; overflow-y: auto; 
+    scroll-snap-type: y mandatory; scroll-behavior: smooth; 
+  }
+  .section { 
+    height: 100vh; scroll-snap-align: start; 
+    display: flex; align-items: center; justify-content: center; 
+    padding: 2rem; 
+  }
+  .section-inner { 
+    display: flex; align-items: center; gap: 3rem; 
+    max-width: 1200px; width: 100%; 
+  }
+  .section-inner.reverse { flex-direction: row-reverse; }
+
+  /* ── Carte Texte ── */
+  .text-card {
+    flex: 1; background: rgba(255,255,255,0.75); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.5); border-radius: 24px; padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(180,140,160,0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+    transform: translateY(60px); opacity: 0; transition: all 1s cubic-bezier(0.25,0.46,0.45,0.94);
+    position: relative; overflow: hidden;
+  }
+  .text-card::before {
+    content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(135deg, #f8bbd0, #ce93d8, #80cbc4, #ffcc80);
+    border-radius: 26px; z-index: -1; opacity: 0; transition: opacity 0.6s ease;
+  }
+  .section.active .text-card::before { opacity: 1; }
+  .text-card::after {
+    content: ''; position: absolute; top:0;left:0;right:0;bottom:0;
+    background: rgba(255,255,255,0.85); border-radius: 24px; z-index: -1;
+  }
+  .section.active .text-card { transform: translateY(0); opacity: 1; }
+
+  .text-card .icon-title { font-size: 2rem; margin-bottom: 0.3rem; }
+  .text-card h2 { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #6a1b4d; margin-bottom: 1.2rem; line-height: 1.3; }
+  .text-card .poem { font-family: 'Lora', serif; font-size: 1.05rem; line-height: 2; color: #4a3040; white-space: pre-line; }
+  .text-card .divider { width: 60px; height: 2px; background: linear-gradient(90deg, #f8bbd0, #ce93d8); margin: 1rem 0; border-radius: 2px; }
+  .text-card .emoji-footer { text-align: right; font-size: 1.5rem; margin-top: 0.8rem; }
+
+  /* ── Carte Image ── */
+  .image-card {
+    flex: 1; max-width: 450px; transform: scale(0.8) translateY(40px); opacity: 0;
+    transition: all 1.2s cubic-bezier(0.25,0.46,0.45,0.94) 0.3s;
+  }
+  .section.active .image-card { transform: scale(1) translateY(0); opacity: 1; }
+  .image-frame { 
+    position: relative; border-radius: 24px; overflow: hidden; 
+    box-shadow: 0 12px 40px rgba(180,140,160,0.25), 0 2px 8px rgba(0,0,0,0.08); 
+  }
+  .image-frame::after { 
+    content: ''; position: absolute; inset: 0; 
+    border: 3px solid rgba(255,255,255,0.6); border-radius: 24px; pointer-events: none; 
+  }
+  .image-frame img { 
+    width: 100%; height: 420px; object-fit: cover; display: block; 
+    transition: transform 8s ease; 
+  }
+  .section.active .image-frame img { transform: scale(1.05); }
+
+  .image-placeholder {
+    width: 100%; height: 420px; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center;
+    font-size: 4rem; color: #8a5a7a; gap: 0.8rem; border-radius: 24px;
+  }
+  .image-placeholder.pastel-pink { background: linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1); }
+  .image-placeholder.pastel-green { background: linear-gradient(135deg, #e8f5e9, #c8e6c9, #a5d6a7); }
+  .image-placeholder span { 
+    font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; 
+    color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px rgba(0,0,0,0.15); 
+  }
+  .image-placeholder .big-emoji { 
+    font-size: 5rem; animation: gentleBounce 3s ease-in-out infinite; 
+  }
+  @keyframes gentleBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  /* ── Indicateurs & Navigation ── */
+  .scroll-indicator { 
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); 
+    z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; 
+    animation: fadeInUp 1s ease 1s both; transition: opacity 0.5s ease; 
+  }
+  .scroll-indicator.hidden { opacity: 0; pointer-events: none; }
+  .scroll-indicator span { 
+    font-family: 'Lora', serif; font-size: 0.85rem; color: #8a5a7a; letter-spacing: 1px; 
+  }
+  .scroll-arrow { 
+    width: 30px; height: 30px; border-right: 2px solid #8a5a7a; border-bottom: 2px solid #8a5a7a; 
+    transform: rotate(45deg); animation: bounceArrow 2s ease-in-out infinite; 
+  }
+  @keyframes bounceArrow { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(8px)} }
+
+  .nav-dots { 
+    position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%); 
+    z-index: 10; display: flex; flex-direction: column; gap: 1rem; 
+  }
+  .nav-dot { 
+    width: 12px; height: 12px; border-radius: 50%; border: 2px solid #8a5a7a; 
+    background: transparent; cursor: pointer; transition: all 0.4s ease; position: relative; 
+  }
+  .nav-dot.active { 
+    background: #8a5a7a; transform: scale(1.3); box-shadow: 0 0 12px rgba(138,90,122,0.4); 
+  }
+  .nav-dot:hover { background: #b07aa0; }
+  .nav-dot .tooltip { 
+    position: absolute; right: 24px; top: 50%; transform: translateY(-50%); 
+    background: rgba(106,27,77,0.9); color: white; padding: 4px 10px; 
+    border-radius: 8px; font-size: 0.75rem; white-space: nowrap; 
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
+  }
+  .nav-dot:hover .tooltip { opacity: 1; }
+
+  .progress-bar { 
+    position: fixed; top: 0; left: 0; height: 4px; 
+    background: linear-gradient(90deg, #f48fb1, #ce93d8, #80cbc4); 
+    z-index: 20; transition: width 0.3s linear; border-radius: 0 2px 2px 0; 
+  }
+
+  /* ── Intro ── */
+  .intro-overlay { 
+    position: fixed; inset: 0; z-index: 100; 
+    background: linear-gradient(135deg, #fdf6f0, #fce4ec, #f3e5f5); 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    gap: 1.5rem; transition: opacity 0.8s ease, transform 0.8s ease; 
+  }
+  .intro-overlay.fade-out { opacity: 0; transform: scale(1.1); pointer-events: none; }
+  .intro-overlay h1 { 
+    font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: #6a1b4d; 
+    animation: gentleBounce 2s ease-in-out infinite; 
+  }
+  .intro-overlay p { 
+    font-family: 'Lora', serif; font-size: 1.2rem; color: #8a5a7a; font-style: italic; 
+  }
+  .intro-overlay .start-btn { 
+    margin-top: 1rem; padding: 14px 40px; font-family: 'Playfair Display', serif; 
+    font-size: 1.1rem; color: #fff; background: linear-gradient(135deg, #e91e8c, #9c27b0); 
+    border: none; border-radius: 50px; cursor: pointer; 
+    box-shadow: 0 4px 20px rgba(156,39,176,0.35); transition: all 0.3s ease; letter-spacing: 1px; 
+  }
+  .intro-overlay .start-btn:hover { 
+    transform: translateY(-3px); box-shadow: 0 8px 30px rgba(156,39,176,0.5); 
+  }
+
+  @media (max-width: 900px) {
+    .section-inner, .section-inner.reverse { flex-direction: column; gap: 1.5rem; }
+    .text-card { padding: 1.8rem; } 
+    .text-card h2 { font-size: 1.6rem; } 
+    .text-card .poem { font-size: 0.95rem; }
+    .image-placeholder, .image-frame img { height: 280px; } 
+    .image-card { max-width: 90%; }
+    .intro-overlay h1 { font-size: 2.2rem; } 
+    .nav-dots { right: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="particles-container" id="particles"></div>
+
+<!-- Intro -->
+<div class="intro-overlay" id="intro">
+  <h1>🐣 Joyeuses Pâques en Famille 🐣</h1>
+  <p>Un moment de douceur et d'amour familial</p>
+  <button class="start-btn" onclick="startExperience()">✉️ Ouvrir nos cœurs</button>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="nav-dots" id="navDots">
+  <div class="nav-dot active" onclick="goToSection(0)"><span class="tooltip">💌 Tatie Valérie</span></div>
+  <div class="nav-dot" onclick="goToSection(1)"><span class="tooltip">💌 Toute la Famille</span></div>
+</div>
+
+<div class="scroll-indicator" id="scrollIndicator">
+  <span>Défiler vers le bas</span>
+  <div class="scroll-arrow"></div>
+</div>
+
+<div class="scroll-wrapper" id="scrollWrapper">
+
+  <!-- ═══════ SECTION 1 – Tatie Valérie ═══════ -->
+  <div class="section active" data-index="0">
+    <div class="section-inner">
+      <div class="text-card">
+        <div class="icon-title">💌</div>
+        <h2>Pour Tatie Valérie</h2>
+        <div class="divider"></div>
+        <div class="poem">En ce Lundi de Pâques,
+nous te souhaitons une journée remplie de joie et de bénédictions.
+
+Que Dieu éclaire ton chemin,
+qu'Il te donne la force d'avancer avec confiance,
+et qu'Il remplisse ta vie de paix et d'amour.
+
+Que cette fête soit pour toi un nouveau départ,
+plein d'espérance et de belles choses à venir.
+
+Nous pensons très fort à toi.</div>
+        <div class="emoji-footer">🤍🌸🕊️</div>
+      </div>
+      <div class="image-card">
+        <div class="image-frame">
+          <img src="tatie-valerie.jpg" alt="Portrait de Tatie Valérie" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SECTION 2 – Toute la Famille ═══════ -->
+  <div class="section" data-index="1">
+    <div class="section-inner reverse">
+      <div class="text-card">
+        <div class="icon-title">💌</div>
+        <h2>Pour toute la famille</h2>
+        <div class="divider"></div>
+        <div class="poem">En ce Lundi de Pâques,
+nous vous envoyons à tous nos pensées les plus sincères.
+
+Que la paix habite vos cœurs,
+que l'amour vous unisse davantage,
+et que la joie de Pâques illumine chacun de vos foyers.
+
+Que Dieu veille sur chacun de vous,
+vous protège et vous comble de ses bénédictions.
+
+Nous vous portons tous dans nos prières,
+et nous vous envoyons beaucoup d'amour. 🤍</div>
+        <div class="emoji-footer">🤍👨‍👩‍👧‍👦🐣</div>
+      </div>
+      <div class="image-card">
+        <div class="image-frame">
+          <img src="tout-la-famille.jpg" alt="Photo de famille réunie" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Particules ──
+  const emojis = ['🌸','🌷','🐣','🐥','🕊️','✨','💐','🌼','💗','🦋','🥚','🌺'];
+  const particlesContainer = document.getElementById('particles');
+  
+  function createParticle() {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+    const dur = 8 + Math.random() * 12;
+    p.style.animationDuration = dur + 's';
+    p.style.animationDelay = Math.random() * 2 + 's';
+    particlesContainer.appendChild(p);
+    setTimeout(() => p.remove(), (dur + 2) * 1000);
+  }
+  setInterval(createParticle, 600);
+
+  // ── Variables globales ──
+  let started = false, currentIndex = 0, autoScrollInterval = null;
+  const scrollWrapper = document.getElementById('scrollWrapper');
+  const sections = document.querySelectorAll('.section');
+  const dots = document.querySelectorAll('.nav-dot');
+  const progressBar = document.getElementById('progressBar');
+  const scrollIndicator = document.getElementById('scrollIndicator');
+  const intro = document.getElementById('intro');
+
+  // ── Démarrer l'expérience ──
+  function startExperience() {
+    if (started) return;
+    started = true;
+    intro.classList.add('fade-out');
+    setTimeout(() => { 
+      intro.style.display = 'none'; 
+      beginAutoScroll(); 
+    }, 900);
+  }
+
+  // ── Fallback : auto-start après 5 secondes si pas d'interaction ──
+  setTimeout(() => {
+    if (!started) startExperience();
+  }, 5000);
+
+  // ── Mise à jour de la section active au scroll ──
+  function updateActiveSection() {
+    const scrollTop = scrollWrapper.scrollTop;
+    const vh = window.innerHeight;
+    const current = Math.round(scrollTop / vh);
+    
+    sections.forEach((sec, i) => sec.classList.toggle('active', i === current));
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+    
+    const maxScroll = scrollWrapper.scrollHeight - vh;
+    progressBar.style.width = maxScroll > 0 ? (scrollTop / maxScroll) * 100 + '%' : '0%';
+    scrollIndicator.classList.toggle('hidden', scrollTop > 100);
+  }
+  scrollWrapper.addEventListener('scroll', updateActiveSection, { passive: true });
+
+  // ── Navigation vers une section ──
+  function goToSection(index) {
+    if (index < 0 || index >= sections.length) return;
+    currentIndex = index;
+    sections[index].scrollIntoView({ behavior: 'smooth' });
+    updateActiveSection();
+  }
+
+  // ── Auto-rotation des sections ──
+  function beginAutoScroll() {
+    clearInterval(autoScrollInterval);
+    autoScrollInterval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % sections.length;
+      goToSection(currentIndex);
+    }, 7000);
+  }
+
+  // ── Pause auto-scroll à l'interaction utilisateur ──
+  let userInteracted = false;
+  function pauseAutoScroll() {
+    if (!userInteracted) {
+      userInteracted = true;
+      clearInterval(autoScrollInterval);
+      setTimeout(() => { 
+        userInteracted = false; 
+        if (started) beginAutoScroll(); 
+      }, 15000);
+    }
+  }
+  scrollWrapper.addEventListener('wheel', pauseAutoScroll, { passive: true });
+  scrollWrapper.addEventListener('touchstart', pauseAutoScroll, { passive: true });
+
+  // ── Navigation clavier ──
+  document.addEventListener('keydown', e => {
+    if (!started) return;
+    if (e.key === 'ArrowDown' || e.key === ' ') { 
+      e.preventDefault(); 
+      currentIndex = Math.min(currentIndex + 1, sections.length - 1); 
+      goToSection(currentIndex); 
+    }
+    if (e.key === 'ArrowUp') { 
+      e.preventDefault(); 
+      currentIndex = Math.max(currentIndex - 1, 0); 
+      goToSection(currentIndex); 
+    }
+  });
+
+  // ── Initialisation ──
+  document.addEventListener('DOMContentLoaded', () => {
+    // Créer quelques particules initiales
+    for (let i = 0; i < 5; i++) setTimeout(createParticle, i * 300);
+  });
+</script>
+</body>
+</html>
